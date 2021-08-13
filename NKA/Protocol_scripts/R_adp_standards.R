@@ -10,7 +10,7 @@ source('https://git.io/JRSJs')
 # This line downloads the function adp_standard, which we will use below.
 
 adp_points <- read.csv('adp_standards.csv')
-adp_standard(adp_points)
+adp_slope <- adp_standard(adp_points)
 
 # What just happened?
 #
