@@ -142,6 +142,10 @@ calc_kynetic_slopes <- function(input, wells, trim, time_unit = c('seconds', 'mi
 #' @return a 4 by 4 plot
 #' 
 plot_plate <- function(x) {
+	library('patchwork') 
+	# it is not correct to load a library within a function, but I couldn't
+	# find another way to make it work in the 30 seconds I spent searching.
+
 	plot_kynetic(x, wells = paste0('A', 1:6)) +
 	plot_kynetic(x, wells = paste0('A', 7:12)) +
 	plot_kynetic(x, wells = paste0('B', 1:6)) +
@@ -158,7 +162,7 @@ plot_plate <- function(x) {
 	plot_kynetic(x, wells = paste0('G', 7:12)) +
 	plot_kynetic(x, wells = paste0('H', 1:6)) +
 	plot_kynetic(x, wells = paste0('H', 7:12)) +
-	patchwork::plot_layout(nrow = 4)
+	plot_layout(nrow = 4)
 }
 
 
