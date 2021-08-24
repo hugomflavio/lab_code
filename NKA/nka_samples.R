@@ -72,11 +72,11 @@ calc_nka_slopes <- function(x) {
 #' 
 #' @return A table with the NKA slopes but in adp/min rather than OD(mOD)/min
 #' 
-calc_OD_to_adp <- function(nka_slope, nka_unit = c('OD/min', 'mOD/min'), adp_slope, adp_unit = c('OD/nmol', 'mOD/nmol')) {
-    if (!is.data.frame(nka_slope))
+OD_to_ADP <- function(nka_slopes, nka_unit = c('OD/min', 'mOD/min'), adp_slope, adp_unit = c('OD/nmol', 'mOD/nmol')) {
+    if (!is.data.frame(nka_slopes))
         stop('nka_slope must be a data frame')
 
-	if (any(!(c('Sample', 'Slope') %in% colnames(x))))
+	if (any(!(c('Sample', 'Slope') %in% colnames(nka_slopes))))
         stop("nka_slope must contain the following two columns: 'Sample', 'Slope'.")
 
     if (length(adp_slope) > 1)
@@ -87,12 +87,12 @@ calc_OD_to_adp <- function(nka_slope, nka_unit = c('OD/min', 'mOD/min'), adp_slo
     adp_unit <- match.arg(adp_unit)
 
     if (nka_unit == 'OD/min')
-    	nka_slope$Slope <- nka_slope$Slope * 1000
+    	nka_slopes$Slope <- nka_slopes$Slope * 1000
 
     if (adp_unit == 'OD/nmol')
     	adp_slope <- adp_slope * 1000
 
-    nka_slope$nmolADP_min <- nka_slope$Slope / abs(adp_slope)
+    nka_slopes$nmolADP_min <- nka_slopes$Slope / adp_slope
 
-    return(nka_slope)
+    return(nka_slopes)
 }

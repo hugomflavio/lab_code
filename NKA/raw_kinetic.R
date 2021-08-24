@@ -37,7 +37,7 @@ decimalTime <- function(input, unit = c("h", "m", "s")) {
 #' 
 #' @return a data frame with the wells in the columns and the timesteps in the rows
 #' 
-load_kynetic <- function(file) {
+load_kinetic <- function(file) {
 	input <- readLines(file)
 	to_read <- input[3:(which(input == '')[2] - 1)]
 	to_read[1] <- sub('\tT[^\t]*', '\tT', to_read[1])
@@ -51,12 +51,12 @@ load_kynetic <- function(file) {
 
 #' plot kinetic data
 #' 
-#' @param input the dataframe inported using load_kynetic()
+#' @param input the dataframe inported using load_kinetic()
 #' @param wells Optional: The wells to be plotted
 #' 
 #' @return A plot
 #' 
-plot_kynetic <- function(input, wells) {
+plot_kinetic <- function(input, wells) {
 	if (!missing(wells)) {
 		if (!any(wells %in% colnames(input)))
 			stop('Could not find one or more of the required wells in the input columns')
@@ -77,16 +77,16 @@ plot_kynetic <- function(input, wells) {
 	p
 }
 
-#' Calculate slopes from kynetic input
+#' Calculate slopes from kinetic input
 #' 
-#' @param input the dataframe inported using load_kynetic()
+#' @param input the dataframe inported using load_kinetic()
 #' @param wells Optional: The wells to be calculated
 #' @param time_unit The input time unit (seconds or minutes)
 #' @param abs_unit The input absorbance unit (OD or mOD)
 #' 
 #' @return A dataframe with the slopes calculated in mOD/min
 #' 
-calc_kynetic_slopes <- function(input, wells, trim, time_unit = c('seconds', 'minutes'), abs_unit = c('OD', 'mOD')) {
+calc_kinetic_slopes <- function(input, wells, trim, time_unit = c('seconds', 'minutes'), abs_unit = c('OD', 'mOD')) {
 	time_unit <- match.arg(time_unit)
 	abs_unit <- match.arg(abs_unit)
 
@@ -137,7 +137,7 @@ calc_kynetic_slopes <- function(input, wells, trim, time_unit = c('seconds', 'mi
 
 #' Shortcut to plot wells 6 at a time
 #' 
-#' @param x the dataframe inported using load_kynetic()
+#' @param x the dataframe inported using load_kinetic()
 #' 
 #' @return a 4 by 4 plot
 #' 
@@ -146,22 +146,22 @@ plot_plate <- function(x) {
 	# it is not correct to load a library within a function, but I couldn't
 	# find another way to make it work in the 30 seconds I spent searching.
 
-	plot_kynetic(x, wells = paste0('A', 1:6)) +
-	plot_kynetic(x, wells = paste0('A', 7:12)) +
-	plot_kynetic(x, wells = paste0('B', 1:6)) +
-	plot_kynetic(x, wells = paste0('B', 7:12)) +
-	plot_kynetic(x, wells = paste0('C', 1:6)) +
-	plot_kynetic(x, wells = paste0('C', 7:12)) +
-	plot_kynetic(x, wells = paste0('D', 1:6)) +
-	plot_kynetic(x, wells = paste0('D', 7:12)) +
-	plot_kynetic(x, wells = paste0('E', 1:6)) +
-	plot_kynetic(x, wells = paste0('E', 7:12)) +
-	plot_kynetic(x, wells = paste0('F', 1:6)) +
-	plot_kynetic(x, wells = paste0('F', 7:12)) +
-	plot_kynetic(x, wells = paste0('G', 1:6)) +
-	plot_kynetic(x, wells = paste0('G', 7:12)) +
-	plot_kynetic(x, wells = paste0('H', 1:6)) +
-	plot_kynetic(x, wells = paste0('H', 7:12)) +
+	plot_kinetic(x, wells = paste0('A', 1:6)) +
+	plot_kinetic(x, wells = paste0('A', 7:12)) +
+	plot_kinetic(x, wells = paste0('B', 1:6)) +
+	plot_kinetic(x, wells = paste0('B', 7:12)) +
+	plot_kinetic(x, wells = paste0('C', 1:6)) +
+	plot_kinetic(x, wells = paste0('C', 7:12)) +
+	plot_kinetic(x, wells = paste0('D', 1:6)) +
+	plot_kinetic(x, wells = paste0('D', 7:12)) +
+	plot_kinetic(x, wells = paste0('E', 1:6)) +
+	plot_kinetic(x, wells = paste0('E', 7:12)) +
+	plot_kinetic(x, wells = paste0('F', 1:6)) +
+	plot_kinetic(x, wells = paste0('F', 7:12)) +
+	plot_kinetic(x, wells = paste0('G', 1:6)) +
+	plot_kinetic(x, wells = paste0('G', 7:12)) +
+	plot_kinetic(x, wells = paste0('H', 1:6)) +
+	plot_kinetic(x, wells = paste0('H', 7:12)) +
 	plot_layout(nrow = 4)
 }
 
