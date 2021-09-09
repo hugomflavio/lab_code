@@ -6,7 +6,7 @@
 # containing two columns: 'Protein' and 'Abs'
 # Name the file 'bca_standards.csv' then run:
 
-source('https://git.io/JRSJs')
+source('https://git.io/JuEVq')
 # This line downloads the function bca_standard, which we will use below.
 
 bca_std <- read.csv('bca_standards.csv', header = TRUE)
@@ -37,7 +37,7 @@ bca_model <- bca_standard(bca_std, protein_unit = 'ug/ml')
 # containing two columns: 'Sample' and 'Abs'
 # Name the file 'bca_samples.csv' then run:
 
-source('https://git.io/JRSJs')
+source('https://git.io/JuEVk')
 # This line downloads the function bca analysis functions.
 
 samples <- read.csv('bca_samples.csv', headers = TRUE)
