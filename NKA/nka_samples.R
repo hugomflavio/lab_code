@@ -27,8 +27,8 @@ calc_nka_means <- function(x) {
 
 	output <- do.call(rbind, sample_means)
 
-	if (any(output$SD < 0.5))
-		warning('Some samples have high standard deviation. You may want to double-check the input data.', call. = FALSE, immediate. = TRUE)
+	if (any(output$SD > 1.5))
+		warning('Some samples have high standard deviation (sd > 1.5). You may want to double-check the input data.', call. = FALSE, immediate. = TRUE)
 
 	return(output)
 }
