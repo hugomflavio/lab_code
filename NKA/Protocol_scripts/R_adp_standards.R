@@ -1,8 +1,8 @@
-# ------------------------------------------
-# R-script to calculate the standard curve
-# ------------------------------------------
+# ---------------------------------------------
+# R-script to calculate the NKA standard curve
+# ---------------------------------------------
 
-# start by storing the absorbance values in a csv 
+# Start by storing the absorbance values in a csv 
 # containing two columns: 'ADP' and 'Abs'
 # Name the file 'adp_standards.csv' then run:
 
