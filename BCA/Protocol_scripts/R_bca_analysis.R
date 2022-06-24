@@ -40,13 +40,13 @@ bca_model <- bca_standard(bca_std, protein_unit = 'ug/ml')
 source('https://git.io/JuEVk')
 # This line downloads the function bca analysis functions.
 
-samples <- read.csv('bca_samples.csv', headers = TRUE)
+samples <- read.csv('bca_samples.csv', header = TRUE)
 sample_means <- calc_bca_means(samples)
 
 sample_protein <- calc_sample_protein(sample = sample_means,
 									  sample_unit = 'OD',
 									  bca_model = bca_model,
-									  bca_unit = 'OD/ug',
+									  bca_unit = 'OD/ug/ul',
 									  dilution_factor = 15)
 
 write.csv(sample_protein, 'sample_protein_concentrations.csv')

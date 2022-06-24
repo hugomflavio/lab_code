@@ -31,33 +31,36 @@ calc_bca_means <- function(x) {
 #' 
 #' @return A table with the protein concentrations for each sample.
 #' 
-calc_sample_protein <- function(samples, sample_unit = c('OD', 'mOD'), bca_model, bca_unit = c('OD/ug', 'mOD/ug'), dilution_factor = 10) {
+calc_sample_protein <- function(samples, sample_unit = c('OD', 'mOD'), bca_model, bca_unit = c('OD/ug/ul', 'mOD/ug/ul'), dilution_factor = 10) {
+
     if (!is.data.frame(samples))
         stop('samples must be a data frame')
 
-	if (any(!(c('Sample', 'Mean.Abs') %in% colnames(samples))))
+    if (any(!(c('Sample', 'Mean.Abs') %in% colnames(samples))))
         stop("samples must contain the following two columns: 'Sample', 'Mean.Abs'.")
 
     if (!inherits(bca_model, 'lm'))
         stop('bca_model must be a linear model object.')
 
+    if (length(dillution_factor) != 1 & length(dillution_factor) != nrow(samples))
+        stop('dillution_factor must be of length 1 or length == nrow(samples).')
+
     sample_unit <- match.arg(sample_unit)
     bca_unit <- match.arg(bca_unit)
 
-
-    if (sample_unit == 'mOD' & bca_unit == 'OD/ug')
-    	samples$Mean.Abs <- samples$Mean.Abs / 1000
-
-    if (sample_unit == 'OD' & bca_unit == 'mOD/ug')
-        samples$Protein_ug <- samples$Protein_ug * 1000
+    if (sample_unit == 'mOD' & bca_unit == 'OD/ug/ul')
+        samples$Mean.Abs <- samples$Mean.Abs / 1000
 
     colnames(samples)[colnames(samples) == 'Mean.Abs'] <- 'Abs'
 
-    samples$Protein_ug <- predict(bca_model, samples)
+    samples$Protein_ug_ml <- predict(bca_model, samples)
 
     colnames(samples)[colnames(samples) == 'Abs'] <- 'Mean.Abs'
 
-    samples$Protein_ug <- samples$Protein_ug * dilution_factor
+    samples$Protein_ug_ml <- samples$Protein_ug_ml * dilution_factor
+
+    if (sample_unit == 'OD' & bca_unit == 'mOD/ug/ul')
+        samples$Protein_ug_ml <- samples$Protein_ug_ml * 1000
 
     return(samples)
 }
