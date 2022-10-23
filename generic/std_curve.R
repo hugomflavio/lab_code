@@ -29,6 +29,11 @@ std_curve <- function(data, x, abs, plot = TRUE) {
       message(paste('Model equation: abs =', round(coef(m_mean)[2], 4), 
             '* x', ifelse(coef(m_mean)[1] < 0, '-', '+'),
             round(abs(coef(m_mean)[1]), 4)))
+      message(paste0('                x = (abs ',
+            ifelse(coef(m_mean)[1] < 0, '-', '+'),
+            round(abs(coef(m_mean)[1]), 4),
+            ") / ", round(coef(m_mean)[2], 4))
+      )
 
       if (plot) {
             data$pred <- predict(m_all, data)
@@ -40,4 +45,17 @@ std_curve <- function(data, x, abs, plot = TRUE) {
       }
 
       return(coef(m_mean))
+}
+
+
+#' Predict concentration of substance x from the recorded absorbances, 
+#' using the coefficients of a model abs ~ x.
+#' 
+#' @param abs The input absorbances
+#' @param coefs A vector of size two containing the intercept and slope of the standard model.
+#' 
+#' @return the predicted concentrations
+#' 
+abs_predict <- function(abs, coefs) {
+      (abs - coefs[1]) / coefs[2]
 }
