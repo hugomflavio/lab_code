@@ -1,9 +1,9 @@
 #' Calculate a generic standard curve, show the R2 and the plot
 #' 
-#' This function also exports the slope of the model.
+#' This function also exports the intercept and slope of the model.
 #' 
-#' @param data The input dataframe with the two column names above
-#' @param x The column name of the concentration column
+#' @param data The input dataframe
+#' @param x The concentration column name
 #' @param abs The absorbance column name
 #' @param plot logical: Should a simple plot of the models be printed? Defaults to TRUE
 #' 
@@ -30,7 +30,7 @@ std_curve <- function(data, x, abs, plot = TRUE) {
             '* x', ifelse(coef(m_mean)[1] < 0, '-', '+'),
             round(abs(coef(m_mean)[1]), 4)))
       message(paste0('                x = (abs ',
-            ifelse(coef(m_mean)[1] < 0, '-', '+'),
+            ifelse(coef(m_mean)[1] < 0, '+ ', '- '),
             round(abs(coef(m_mean)[1]), 4),
             ") / ", round(coef(m_mean)[2], 4))
       )
