@@ -42,8 +42,8 @@ calc_sample_protein <- function(samples, sample_unit = c('OD', 'mOD'), bca_model
     if (!inherits(bca_model, 'lm'))
         stop('bca_model must be a linear model object.')
 
-    if (length(dillution_factor) != 1 & length(dillution_factor) != nrow(samples))
-        stop('dillution_factor must be of length 1 or length == nrow(samples).')
+    if (length(dilution_factor) != 1 & length(dilution_factor) != nrow(samples))
+        stop('dilution_factor must be of length 1 or length == nrow(samples).')
 
     sample_unit <- match.arg(sample_unit)
     bca_unit <- match.arg(bca_unit)
@@ -53,14 +53,14 @@ calc_sample_protein <- function(samples, sample_unit = c('OD', 'mOD'), bca_model
 
     colnames(samples)[colnames(samples) == 'Mean.Abs'] <- 'Abs'
 
-    samples$Protein_ug_ml <- predict(bca_model, samples)
+    samples$Protein_ug_ul <- predict(bca_model, samples)
 
     colnames(samples)[colnames(samples) == 'Abs'] <- 'Mean.Abs'
 
-    samples$Protein_ug_ml <- samples$Protein_ug_ml * dilution_factor
+    samples$Protein_ug_ul <- samples$Protein_ug_ul * dilution_factor
 
     if (sample_unit == 'OD' & bca_unit == 'mOD/ug/ul')
-        samples$Protein_ug_ml <- samples$Protein_ug_ml * 1000
+        samples$Protein_ug_ul <- samples$Protein_ug_ul * 1000
 
     return(samples)
 }

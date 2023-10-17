@@ -37,9 +37,13 @@ decimalTime <- function(input, unit = c("h", "m", "s")) {
 #' 
 #' @return a data frame with the wells in the columns and the timesteps in the rows
 #' 
-load_kinetic <- function(file) {
+read_kinetic <- function(file, skip = 0) {
 	input <- readLines(file)
-	to_read <- input[3:(which(input == '')[2] - 1)]
+
+	if (skip > 0)
+		input <- input[-c(1:skip)]
+
+	to_read <- input[1:(which(input[] == '')[1] - 1)]
 	to_read[1] <- sub('\tT[^\t]*', '\tT', to_read[1])
 
 	output <- read.table(textConnection(to_read), header = TRUE)
@@ -179,3 +183,15 @@ bind_samples_to_wells <- function(samples, wells) {
 	return(output)
 }
 
+
+read_plate <- function(file) {
+	x <- read.csv(file, row.names = 1)
+	x$Row <- rownames(x)
+	x <- reshape2::melt(x, id.vars = "Row")
+	x$Col <- as.numeric(sub("X", "", x$variable))
+	x <- x[order(x$Row, x$Col), ]
+	x$Well <- paste0(x$Row, x$Col)
+	rownames(x) <- 1:nrow(x)
+	x <- x[!is.na(x$value), ]
+	return(x[, c("Well", "value")])
+}

@@ -34,7 +34,12 @@ bca_standard <- function(x, protein_unit = c('ug/ml', 'ug/ul'), plot = TRUE) {
       message(paste('Model equation: Protein =', round(coef(m_mean)[2], 4), 
             '* Abs', ifelse(coef(m_mean)[1] < 0, '-', '+'),
             round(abs(coef(m_mean)[1]), 4)))
-      message('Protein unit: ug/ul\nX unit: OD')
+      message('Protein unit: ug/ul\nAbs unit: OD')
+
+      classic_m <- lm(Abs ~ Protein, data = mean_points)
+      message(paste('\nClassic model: Abs =', round(coef(classic_m)[2], 4), 
+            '* Protein', ifelse(coef(classic_m)[1] < 0, '-', '+'),
+            round(abs(coef(classic_m)[1]), 4)))
 
       if (plot) {
             x$pred <- predict(m_all, x)

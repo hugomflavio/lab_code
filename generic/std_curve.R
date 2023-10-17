@@ -56,6 +56,15 @@ std_curve <- function(data, x, abs, plot = TRUE) {
 #' 
 #' @return the predicted concentrations
 #' 
-abs_predict <- function(abs, coefs) {
-      (abs - coefs[1]) / coefs[2]
+abs_predict <- function(abs, coefs, add_to_plot = FALSE, col = "red") {
+      con <- (abs - coefs[1]) / coefs[2]
+
+      if (add_to_plot){
+            for (i in 1:length(con)) {
+                  lines(x = c(0, con[i], con[i]), y = c(abs[i], abs[i], 0), lty = "dashed", col = col)
+                  points(x = con[i], y = abs[i], col = col, pch = 16)
+            }
+      }
+
+      return(con)
 }
