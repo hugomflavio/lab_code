@@ -49,7 +49,7 @@ read_kinetic <- function(file, skip = 0) {
 	output <- read.table(textConnection(to_read), header = TRUE)
 
 	output$Time <- decimalTime(output$Time, unit = 's')
-	output$Time <- output$Time - output$Time[1]
+	output$Time <- as.integer(output$Time - output$Time[1])
 	return(output)
 }
 
@@ -177,14 +177,14 @@ plot_plate <- function(x) {
 #' 
 #' @return a dataframe with both the sample and well data.
 #' 
-bind_samples_to_wells <- function(samples, wells) {
+bind_well_IDs <- function(samples, wells) {
 	link <- match(samples$Well, wells$Well)
-	output <- cbind(samples, wells[link, !(colnames(wells) %in% 'Well')])
-	return(output)
+	samples$ID <- wells$ID[link]
+	return(samples)
 }
 
 
-read_plate <- function(file) {
+read_plate_csv <- function(file) {
 	x <- read.csv(file, row.names = 1)
 	x$Row <- rownames(x)
 	x <- reshape2::melt(x, id.vars = "Row")
@@ -195,3 +195,61 @@ read_plate <- function(file) {
 	x <- x[!is.na(x$value), ]
 	return(x[, c("Well", "value")])
 }
+
+read_plate_ods <- function(file, range = "B1:M9") {
+	IDs <- read_ods(file, range = range)
+	IDs$Row <- LETTERS[1:8]
+	IDs <- reshape2::melt(IDs, id.vars = "Row")
+	IDs$Column <- as.numeric(sub("X", "", IDs$variable))
+	IDs$ID <- IDs$value
+	IDs$variable <- IDs$value <- NULL
+	IDs$Well <- paste0(IDs$Row, IDs$Column)
+	return(IDs)
+}
+
+
+
+read_spec_txt <- function(file) {
+	input <- readLines(file)
+
+	input[grepl("Read", input) & grepl("\t", input)]
+	table_heads <- which(grepl("Read", input) & grepl("\t", input))
+
+	recipient <- lapply(table_heads, function(i) {
+		subinput <- input[i:length(input)]
+		to_read <- subinput[1:(which(subinput == '')[1] - 1)]
+		output <- read.table(textConnection(to_read), header = TRUE, sep = "\t")
+
+		if (any(grepl("^Read", colnames(output)))) {
+			output <- output[, grepl("^Well$|^Read", colnames(output))]
+		} else 
+		if (any(colnames(output) == "Time")) {
+			output$Time <- decimalTime(output$Time, unit = 's')
+			output$Time <- as.integer(output$Time - output$Time[1])
+			output[, 2] <- NULL
+		} else {
+			return(NULL)
+		}
+		return(output)
+	})
+
+	recipient <- recipient[!sapply(recipient, is.null)]
+
+	names(recipient) <- sapply(recipient, function(x) {
+		stringr::str_extract(stringr::str_subset(colnames(x), "Read.*"), "Read.*")[1]
+	})
+
+	message("M: Found ", length(recipient), " raw data table", ifelse(length(recipient) > 1, "s", "") ," in the file.")
+	return(recipient)
+}
+
+melt_kinetic <- function(kinetic_table) {
+	output <- reshape2::melt(kinetic_table, id.vars = "Time")
+	output$Well <- output$variable
+	output$ABS <- output$value
+	output$variable <- output$value <- NULL
+	return(output)
+}
+
+
+
