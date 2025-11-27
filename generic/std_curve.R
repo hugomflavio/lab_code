@@ -9,7 +9,7 @@
 #' 
 #' @return the model slope and intercept
 #' 
-std_curve <- function(data, x, abs, plot = TRUE) {
+std_curve <- function(data, x, abs, plot = TRUE, ...) {
       if (!is.data.frame(data))
             stop('"data" must be a data frame')
 
@@ -39,7 +39,7 @@ std_curve <- function(data, x, abs, plot = TRUE) {
             data$pred <- predict(m_all, data)
             mean_points$pred <- predict(m_mean, mean_points)
 
-            plot(abs ~ x, data = data)
+            plot(abs ~ x, data = data, ...)
             points(abs ~ x, data = mean_points, col = 'red', pch = 16)
             lines(pred ~ x, data = data, col = 'red')
       }
