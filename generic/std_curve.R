@@ -44,7 +44,10 @@ std_curve <- function(data, x, abs, plot = TRUE, ...) {
             lines(pred ~ x, data = data, col = 'red')
       }
 
-      return(coef(m_mean))
+      output <- list(coef = coef(m_mean),
+                     R2 = c(points = summary(m_all)$r.squared,
+                            means = summary(m_mean)$r.squared))
+      return(output)
 }
 
 
